@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astrology Calculators - BCP Sign & Longevity</title>
+  <style>
+    :root {
+      --primary-color: #0078d7;
+      --secondary-color: #005fa3;
+      --accent-color: #6c63ff;
+      --light-bg: #f5f7fa;
+      --dark-text: #333;
+      --light-text: #666;
+      --white: #ffffff;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      color: var(--dark-text);
+      line-height: 1.6;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: var(--dark-text);
+      margin-bottom: 10px;
+      font-size: 2.2rem;
+    }
+    
+    .subtitle {
+      color: var(--light-text);
+      font-size: 1.1rem;
+    }
+    
+    .calculator {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    
+    .calculator:hover {
+      transform: translateY(-5px);
+    }
+    
+    h2 {
+      text-align: center;
+      color: var(--dark-text);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--light-bg);
+    }
+    
+    .instruction-box {
+      background: #f0f8ff;
+      border-left: 4px solid var(--primary-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    .instruction-box strong {
+      color: var(--primary-color);
+    }
+    
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 600;
+      color: var(--dark-text);
+    }
+    
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    select:focus, input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+    }
+    
+    button {
+      display: inline-block;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+    
+    button:hover {
+      background: var(--secondary-color);
+      transform: scale(1.03);
+    }
+    
+    .secondary-btn {
+      background: #555;
+      margin-left: 10px;
+    }
+    
+    .secondary-btn:hover {
+      background: #333;
+    }
+    
+    .reset-btn {
+      background: #dc3545;
+      margin-left: 10px;
+    }
+    
+    .reset-btn:hover {
+      background: #b92a38;
+    }
+    
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f0f8ff;
+      border-left: 4px solid var(--primary-color);
+      border-radius: 8px;
+      font-size: 16px;
+      color: var(--dark-text);
+    }
+    
+    .result strong {
+      display: inline-block;
+      width: 120px;
+      color: var(--primary-color);
+    }
+    
+    .output {
+      margin-top: 25px;
+      background: #fafafa;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      padding: 20px;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .output strong {
+      color: var(--dark-text);
+    }
+    
+    ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 25px 30px;
+      max-width: 600px;
+      width: 90%;
+      overflow-y: auto;
+      max-height: 85vh;
+      animation: zoomIn 0.3s ease-in-out;
+    }
+    
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--dark-text);
+      font-size: 22px;
+      font-weight: bold;
+      float: right;
+      cursor: pointer;
+    }
+    
+    .ruler-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    
+    .ruler-table th, .ruler-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    
+    .ruler-table th {
+      background-color: #f0f0f0;
+    }
+    
+    .rules-section h3 {
+      margin-top: 20px;
+      color: var(--primary-color);
+    }
+    
+    .rules-section p {
+      margin-top: 6px;
+    }
+    
+    .example-box {
+      background: #f9f9f9;
+      border-left: 4px solid var(--primary-color);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 10px;
+      }
+      
+      .calculator {
+        padding: 20px;
+      }
+      
+      button {
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0;
+      }
+      
+      .secondary-btn, .reset-btn {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Astrology Calculators</h1>
+      <p class="subtitle">BCP Sign Calculator & BCP Longevity Calculator</p>
+    </header>
+    
+    <!-- BCP Sign Calculator -->
+    <div class="calculator">
+      <h2>BCP Sign Calculator using Year and Lagna</h2>
+      
+      <div class="instruction-box">
+        <strong>Instructions:</strong><br>
+        Select your Ascendant (Lagna) and enter your age to calculate the corresponding house and zodiac sign.
+      </div>
+      
+      <label for="ascendant1">Select Ascendant (Lagna):</label>
+      <select id="ascendant1">
+        <option>Aries</option>
+        <option>Taurus</option>
+        <option>Gemini</option>
+        <option>Cancer</option>
+        <option>Leo</option>
+        <option>Virgo</option>
+        <option>Libra</option>
+        <option>Scorpio</option>
+        <option>Sagittarius</option>
+        <option>Capricorn</option>
+        <option>Aquarius</option>
+        <option>Pisces</option>
+      </select>
+
+      <label for="age">Enter Age:</label>
+      <input type="number" id="age" value="0" min="0" />
+
+      <label for="countStart">House Counting Starts From:</label>
+      <select id="countStart">
+        <option value="1" selected>1</option>
+        <option value="0">0</option>
+      </select>
+
+      <button onclick="calculateSignHouse()">Calculate</button>
+      <button class="reset-btn" onclick="resetSignHouse()">Reset</button>
+
+      <div class="result" id="signHouseResult">
+        <strong>House:</strong> <span id="house">-</span><br />
+        <strong>Zodiac Sign:</strong> <span id="sign">-</span>
+      </div>
+    </div>
+    
+    <!-- BCP Longevity Calculator -->
+    <div class="calculator">
+      <h2>BCP Longevity Calculator</h2>
+
+      <div class="instruction-box">
+        <strong>Instructions:</strong><br>
+        🪐 <b>Ascendant Sign:</b> Select your Lagna (rising sign) from the birth chart.<br>
+        🧭 <b>Rule 1:</b> Choose this if the Ascendant has any planet in it. Then select where <b>Saturn</b> is placed.<br>
+        🌙 <b>Rule 2:</b> Choose this if the Ascendant is empty. Then select where <b>Moon</b> is placed.<br>
+        📅 The calculator shows your critical BCP years and their planetary rulers.<br><br>
+        ❓ <b>Don't understand the BCP rules or age rulers?</b><br>
+        Click <b>📜 Show BCP Rules</b> below for full clarity before calculating.
+      </div>
+
+      <label for="ascendant2">Ascendant Sign:</label>
+      <select id="ascendant2">
+        <option value="Cancer">Cancer</option>
+        <option value="Leo">Leo</option>
+        <option value="Virgo">Virgo</option>
+        <option value="Libra">Libra</option>
+        <option value="Scorpio">Scorpio</option>
+        <option value="Sagittarius">Sagittarius</option>
+        <option value="Capricorn">Capricorn</option>
+        <option value="Aquarius">Aquarius</option>
+        <option value="Pisces">Pisces</option>
+        <option value="Aries">Aries</option>
+        <option value="Taurus">Taurus</option>
+        <option value="Gemini">Gemini</option>
+      </select>
+
+      <label for="rule">Which Rule to Apply:</label>
+      <select id="rule">
+        <option value="rule1">Rule 1 (Ascendant Occupied)</option>
+        <option value="rule2">Rule 2 (Ascendant Empty)</option>
+      </select>
+
+      <div id="rule1Inputs">
+        <label for="saturnSign">Saturn Sign:</label>
+        <select id="saturnSign">
+          <option value="Aries">Aries</option>
+          <option value="Taurus">Taurus</option>
+          <option value="Gemini">Gemini</option>
+          <option value="Cancer">Cancer</option>
+          <option value="Leo">Leo</option>
+          <option value="Virgo">Virgo</option>
+          <option value="Libra">Libra</option>
+          <option value="Scorpio">Scorpio</option>
+          <option value="Sagittarius">Sagittarius</option>
+          <option value="Capricorn">Capricorn</option>
+          <option value="Aquarius">Aquarius</option>
+          <option value="Pisces">Pisces</option>
+        </select>
+      </div>
+
+      <div id="rule2Inputs" style="display:none;">
+        <label for="moonSign">Moon Sign:</label>
+        <select id="moonSign">
+          <option value="Aries">Aries</option>
+          <option value="Taurus">Taurus</option>
+          <option value="Gemini">Gemini</option>
+          <option value="Cancer">Cancer</option>
+          <option value="Leo">Leo</option>
+          <option value="Virgo">Virgo</option>
+          <option value="Libra">Libra</option>
+          <option value="Scorpio">Scorpio</option>
+          <option value="Sagittarius">Sagittarius</option>
+          <option value="Capricorn">Capricorn</option>
+          <option value="Aquarius">Aquarius</option>
+          <option value="Pisces">Pisces</option>
+        </select>
+      </div>
+
+      <button onclick="calculateBCP()">🔢 Calculate</button>
+      <button class="secondary-btn" onclick="openModal()">📜 Show BCP Rules</button>
+      <button class="reset-btn" onclick="resetBCP()">♻️ Reset</button>
+
+      <div class="output" id="bcpOutput"></div>
+    </div>
+  </div>
+
+  <!-- Modal Popup -->
+  <div id="rulesModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <div class="rules-section">
+        <h3>📜 BCP Rulers by Age</h3>
+        <table class="ruler-table">
+          <tr><th>Age Range</th><th>BCP Ruler</th></tr>
+          <tr><td>1 – 12</td><td>Moon</td></tr>
+          <tr><td>13 – 24</td><td>Mercury</td></tr>
+          <tr><td>25 – 36</td><td>Venus</td></tr>
+          <tr><td>37 – 48</td><td>Sun</td></tr>
+          <tr><td>49 – 60</td><td>Mars</td></tr>
+          <tr><td>61 – 72</td><td>Jupiter</td></tr>
+          <tr><td>73 – 84</td><td>Saturn</td></tr>
+          <tr><td>85 – 96</td><td>Rahu</td></tr>
+          <tr><td>97 – 108</td><td>Ketu</td></tr>
+        </table>
+
+        <h3>📘 Rule 1: Ascendant Is Occupied</h3>
+        <p>
+          If the Ascendant (Lagna) has any planet placed in it, then death or danger may occur in the BCP year corresponding to the house where Saturn is placed.
+        </p>
+        <div class="example-box">
+          <strong>Example:</strong><br>
+          - Ascendant = Cancer (with Moon placed there → Ascendant is occupied).<br>
+          - Saturn is in the 10th house (Aries).<br>
+          ➤ So Year <b>10</b> becomes a critical BCP year. The same house repeats every 12 years (ages 10, 22, 34, etc.) under different planetary rulers.
+        </div>
+
+        <h3>📘 Rule 2: Ascendant Is Empty</h3>
+        <p>
+          If the Ascendant has no planet, then death or danger may occur in the BCP year corresponding to:
+          <ul>
+            <li>The house where Moon is placed</li>
+            <li>The 5th house from Moon</li>
+            <li>The 6th house from Moon</li>
+            <li>The 8th house from Moon</li>
+          </ul>
+        </p>
+        <div class="example-box">
+          <strong>Example:</strong><br>
+          - Moon is in the 9th house.<br>
+          - Sensitive Houses = 9 (Moon), 1 (5th), 2 (6th), 4 (8th).<br>
+          ➤ So Years <b>1, 2, 4, and 9</b> are potentially vulnerable. These same houses repeat every 12 years under different planetary rulers.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Common variables
+    const zodiac = [
+      "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+      "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+    ];
+    
+    const signOrder = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+
+    // BCP Sign Calculator Functions
+    function calculateSignHouse() {
+      const asc = document.getElementById("ascendant1").value;
+      const age = parseInt(document.getElementById("age").value);
+      const countStart = parseInt(document.getElementById("countStart").value);
+
+      const ascNum = zodiac.indexOf(asc); // 0-indexed
+
+      // Correct house calculation
+      let houseNum = (age + countStart) % 12;
+      if (houseNum === 0) houseNum = 12; // ensure house is 1-12
+
+      // Correct zodiac/sign calculation
+      const signIndex = (ascNum + houseNum - 1) % 12;
+      const signName = zodiac[signIndex];
+
+      document.getElementById("house").innerText = houseNum;
+      document.getElementById("sign").innerText = signName;
+    }
+    
+    function resetSignHouse() {
+      document.getElementById("ascendant1").selectedIndex = 0;
+      document.getElementById("age").value = 0;
+      document.getElementById("countStart").selectedIndex = 0;
+      document.getElementById("house").innerText = "-";
+      document.getElementById("sign").innerText = "-";
+    }
+
+    // BCP Longevity Calculator Functions
+    document.getElementById("rule").addEventListener("change", function() {
+      document.getElementById("rule1Inputs").style.display = this.value === "rule1" ? "block" : "none";
+      document.getElementById("rule2Inputs").style.display = this.value === "rule2" ? "block" : "none";
+    });
+
+    function openModal() {
+      document.getElementById("rulesModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("rulesModal").style.display = "none";
+    }
+
+    window.onclick = function(e) {
+      if (e.target === document.getElementById("rulesModal")) closeModal();
+    }
+
+    function resetBCP() {
+      document.getElementById("ascendant2").selectedIndex = 0;
+      document.getElementById("rule").selectedIndex = 0;
+      document.getElementById("saturnSign").selectedIndex = 0;
+      document.getElementById("moonSign").selectedIndex = 0;
+      document.getElementById("rule1Inputs").style.display = "block";
+      document.getElementById("rule2Inputs").style.display = "none";
+      document.getElementById("bcpOutput").innerHTML = "";
+    }
+
+    function calculateBCP() {
+      const asc = document.getElementById("ascendant2").value;
+      const rule = document.getElementById("rule").value;
+      let output = "";
+
+      function getSignForHouse(ascSign, houseNumber) {
+        const ascIndex = signOrder.indexOf(ascSign);
+        const signIndex = (ascIndex + (houseNumber - 1)) % 12;
+        return signOrder[signIndex];
+      }
+
+      if (rule === "rule1") {
+        const saturn = document.getElementById("saturnSign").value;
+        const saturnHouse = (signOrder.indexOf(saturn) - signOrder.indexOf(asc) + 12) % 12 + 1;
+        let details = "<ul>";
+        for (let age = saturnHouse; age <= 96; age += 12) {
+          const ruler = getBCPRuler(age);
+          details += `<li>Age ${age} → ${ruler}</li>`;
+        }
+        details += "</ul>";
+        output = `<strong>Rule 1 Applied:</strong><br>
+                  Saturn is in ${saturn}, which is the ${saturnHouse}th house from Ascendant (${asc}).<br>
+                  These years correspond to Saturn's house being activated in the BCP cycle.<br><br>
+                  Critical BCP Years and Rulers:${details}`;
+      } 
+      else {
+        const moon = document.getElementById("moonSign").value;
+        const moonHouse = (signOrder.indexOf(moon) - signOrder.indexOf(asc) + 12) % 12 + 1;
+        const h5 = (moonHouse + 4 - 1) % 12 + 1;
+        const h6 = (moonHouse + 5 - 1) % 12 + 1;
+        const h8 = (moonHouse + 7 - 1) % 12 + 1;
+        const houses = [moonHouse, h5, h6, h8];
+        const sensitiveInfo = houses.map(h => `${h} (${getSignForHouse(asc, h)})`).join(", ");
+        const details = houses.map(h => {
+          let sub = "";
+          for (let age = h; age <= 96; age += 12) {
+            sub += `Age ${age} → ${getBCPRuler(age)}<br>`;
+          }
+          return `<strong>${h}th House (${getSignForHouse(asc, h)})</strong>:<br>${sub}`;
+        }).join("<br>");
+        output = `<strong>Rule 2 Applied:</strong><br>
+                  Moon is in ${moon}, which is the ${moonHouse}th house from Ascendant (${asc}).<br>
+                  Sensitive Houses (Moon + 5th, 6th, 8th): ${sensitiveInfo}.<br><br>
+                  These houses indicate emotionally or physically vulnerable phases.<br>
+                  The same houses repeat every 12 years under a different BCP ruler, as listed below.<br><br>
+                  Critical BCP Years and Rulers:<br>${details}`;
+      }
+
+      document.getElementById("bcpOutput").innerHTML = output;
+    }
+
+    function getBCPRuler(age) {
+      if (age >= 1 && age <= 12) return "Moon";
+      if (age >= 13 && age <= 24) return "Mercury";
+      if (age >= 25 && age <= 36) return "Venus";
+      if (age >= 37 && age <= 48) return "Sun";
+      if (age >= 49 && age <= 60) return "Mars";
+      if (age >= 61 && age <= 72) return "Jupiter";
+      if (age >= 73 && age <= 84) return "Saturn";
+      if (age >= 85 && age <= 96) return "Rahu";
+      if (age >= 97 && age <= 108) return "Ketu";
+      return "—";
+    }
+  </script>
+</body>
+</html>
