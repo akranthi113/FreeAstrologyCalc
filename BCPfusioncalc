@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BCP-Vimshottari Fusion Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 420px;
+      width: 90%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1e3a8a;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button.reset {
+      background: #6b7280;
+    }
+
+    button.reset:hover {
+      background: #4b5563;
+    }
+
+    #output {
+      margin-top: 25px;
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      color: #111827;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    strong {
+      color: #1e40af;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>BCP-Vimshottari Fusion Calculator</h2>
+
+    <label for="lagna">Lagna Sign:</label>
+    <select id="lagna">
+      <option value="Aries">Aries</option>
+      <option value="Taurus">Taurus</option>
+      <option value="Gemini">Gemini</option>
+      <option value="Cancer">Cancer</option>
+      <option value="Leo">Leo</option>
+      <option value="Virgo">Virgo</option>
+      <option value="Libra">Libra</option>
+      <option value="Scorpio">Scorpio</option>
+      <option value="Sagittarius">Sagittarius</option>
+      <option value="Capricorn">Capricorn</option>
+      <option value="Aquarius">Aquarius</option>
+      <option value="Pisces">Pisces</option>
+    </select>
+
+    <label for="age">Age (Year of Life):</label>
+    <input type="number" id="age" min="1" max="120" placeholder="Enter your age">
+
+    <label for="mdHouse">Mahadasha Lord's House (from Lagna):</label>
+    <input type="number" id="mdHouse" min="1" max="12" placeholder="Enter house number (1–12)">
+
+    <div class="btn-group">
+      <button onclick="calculate()">Calculate</button>
+      <button onclick="showBCPRuler()">Show BCP Ruler</button>
+      <button class="reset" onclick="resetForm()">Reset</button>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const signs = [
+      "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+      "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+    ];
+
+    function getBCPRuler(age) {
+      if (age >= 1 && age <= 12) return "Moon";
+      if (age >= 13 && age <= 24) return "Mercury";
+      if (age >= 25 && age <= 36) return "Venus";
+      if (age >= 37 && age <= 48) return "Sun";
+      if (age >= 49 && age <= 60) return "Mars";
+      if (age >= 61 && age <= 72) return "Jupiter";
+      if (age >= 73 && age <= 84) return "Saturn";
+      if (age >= 85 && age <= 96) return "Rahu";
+      if (age >= 97 && age <= 108) return "Ketu";
+      return "Out of defined BCP range";
+    }
+
+    function calculate() {
+      const lagna = document.getElementById("lagna").value;
+      const age = parseInt(document.getElementById("age").value);
+      const mdHouse = parseInt(document.getElementById("mdHouse").value);
+
+      if (isNaN(age) || isNaN(mdHouse)) {
+        document.getElementById("output").innerHTML = "⚠️ Please enter valid age and Mahadasha house.";
+        return;
+      }
+
+      const lagnaIndex = signs.indexOf(lagna);
+
+      // ✅ Corrected BCP Logic: Age 1 = 1st house, loops every 12 years
+      const focusFromLagna = (age - 1) % 12;
+      const focusSignFromLagna = signs[(lagnaIndex + focusFromLagna) % 12];
+
+      const focusFromMD = (mdHouse + focusFromLagna - 1) % 12;
+      const activatedHouseFromLagna = (focusFromMD + 12) % 12;
+      const activatedSign = signs[(lagnaIndex + activatedHouseFromLagna) % 12];
+
+      const houseThemes = [
+        "Self, health, identity",
+        "Wealth, family, speech",
+        "Courage, siblings, communication",
+        "Home, mother, inner peace",
+        "Creativity, children, romance",
+        "Enemies, debts, health issues",
+        "Marriage, partnerships",
+        "Transformation, occult, inheritance",
+        "Dharma, luck, father",
+        "Career, status, public life",
+        "Gains, networks, ambitions",
+        "Losses, foreign travel, moksha"
+      ];
+
+      const theme = houseThemes[activatedHouseFromLagna];
+      const bcpRuler = getBCPRuler(age);
+
+      document.getElementById("output").innerHTML = `
+        <strong>Focus House from Lagna:</strong> ${focusFromLagna + 1} (${focusSignFromLagna})<br>
+        <strong>Activated House from MD Lord:</strong> ${activatedHouseFromLagna + 1} (${activatedSign})<br>
+        <strong>Yearly Theme:</strong> ${theme}<br>
+        <strong>BCP Ruler:</strong> ${bcpRuler}
+      `;
+    }
+
+    function showBCPRuler() {
+      const rulersList = `
+        <strong>BCP Rulers by Age Range:</strong><br>
+        1–12 → Moon<br>
+        13–24 → Mercury<br>
+        25–36 → Venus<br>
+        37–48 → Sun<br>
+        49–60 → Mars<br>
+        61–72 → Jupiter<br>
+        73–84 → Saturn<br>
+        85–96 → Rahu<br>
+        97–108 → Ketu
+      `;
+      document.getElementById("output").innerHTML = rulersList;
+    }
+
+    function resetForm() {
+      document.getElementById("lagna").selectedIndex = 0;
+      document.getElementById("age").value = "";
+      document.getElementById("mdHouse").value = "";
+      document.getElementById("output").innerHTML = "";
+      document.getElementById("lagna").focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
