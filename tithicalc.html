@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedic Tithi Calculator - Correct Implementation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-auspicious { background-color: #dcfce7; border-color: #16a34a; }
+        .bg-medium { background-color: #fef9c3; border-color: #ca8a04; }
+        .bg-inauspicious { background-color: #fee2e2; border-color: #dc2626; }
+        
+        .planet-sun { background-color: #ffd700; }
+        .planet-moon { background-color: #e0e0e0; }
+        .planet-mars { background-color: #ff5252; }
+        .planet-mercury { background-color: #00e676; }
+        .planet-jupiter { background-color: #ffb300; }
+        .planet-venus { background-color: #e91e63; }
+        .planet-saturn { background-color: #7986cb; }
+        .planet-rahu { background-color: #9e9e9e; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-moon text-purple-600 mr-3"></i>
+                Vedic Tithi Calculator
+            </h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Calculate Tithi details based on Paksha and Tithi number
+            </p>
+        </div>
+
+        <!-- Calculator Section -->
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <!-- Input Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">
+                    Find Tithi Details
+                </h2>
+                
+                <div class="space-y-4">
+                    <!-- Paksha Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Paksha</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="sukla-btn" class="paksha-btn bg-blue-100 border-2 border-blue-500 text-blue-700 py-3 px-4 rounded-lg font-medium">
+                                Śukla Pakṣa (Bright Half)
+                            </button>
+                            <button id="krishna-btn" class="paksha-btn bg-gray-100 border-2 border-gray-300 text-gray-600 py-3 px-4 rounded-lg font-medium">
+                                Kṛṣṇa Pakṣa (Dark Half)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tithi Number Input -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tithi Number (1-15)</label>
+                        <select id="tithi-number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Tithi Number...</option>
+                            <option value="1">1 - Pratipada</option>
+                            <option value="2">2 - Dvitīya</option>
+                            <option value="3">3 - Tritīya</option>
+                            <option value="4">4 - Caturthī</option>
+                            <option value="5">5 - Pañcamī</option>
+                            <option value="6">6 - Ṣaṣṭhī</option>
+                            <option value="7">7 - Saptamī</option>
+                            <option value="8">8 - Aṣṭamī</option>
+                            <option value="9">9 - Navamī</option>
+                            <option value="10">10 - Daśamī</option>
+                            <option value="11">11 - Ekādaśī</option>
+                            <option value="12">12 - Dvādaśī</option>
+                            <option value="13">13 - Trayodaśī</option>
+                            <option value="14">14 - Caturdaśī</option>
+                            <option value="15">15 - Pūrṇimā/Amāvāsya</option>
+                        </select>
+                    </div>
+
+                    <!-- Calculate Button -->
+                    <button id="calculate-btn" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors">
+                        Calculate Tithi Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results-section" class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hidden">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Tithi Analysis</h2>
+                
+                <div class="space-y-4">
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <div class="text-sm text-blue-600 font-medium">Tithi Number</div>
+                            <div id="result-tithi-number" class="text-2xl font-bold text-blue-800">-</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                            <div class="text-sm text-purple-600 font-medium">Tithi Name</div>
+                            <div id="result-tithi-name" class="text-xl font-bold text-purple-800">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Tithi Type & Triad -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                            <div class="text-sm text-orange-600 font-medium">Tithi Type</div>
+                            <div id="result-tithi-type" class="text-xl font-bold text-orange-800">-</div>
+                        </div>
+                        <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                            <div class="text-sm text-indigo-600 font-medium">Triad Position</div>
+                            <div id="result-triad" class="text-xl font-bold text-indigo-800">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Quality & Planet -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div id="quality-card" class="p-4 rounded-lg border-2">
+                            <div class="text-sm font-medium">Quality</div>
+                            <div id="result-quality" class="text-xl font-bold">-</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <div class="text-sm text-green-600 font-medium">Ruling Planet</div>
+                            <div id="result-planet" class="text-xl font-bold text-green-800">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Complete Info -->
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-sm text-gray-600 font-medium mb-2">Complete Information</div>
+                        <div id="complete-info" class="text-sm space-y-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reference Table -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Tithi Classification Reference</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th rowspan="2" class="p-3 border font-semibold text-left">Tithi Type</th>
+                            <th colspan="3" class="p-3 border text-center font-semibold bg-blue-50">Śukla Pakṣa (Bright Half)</th>
+                            <th colspan="3" class="p-3 border text-center font-semibold bg-gray-100">Kṛṣṇa Pakṣa (Dark Half)</th>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <!-- Sukla Paksha Headers -->
+                            <th class="p-2 border text-center font-medium bg-red-100 text-red-800">1st Triad<br>Inauspicious</th>
+                            <th class="p-2 border text-center font-medium bg-yellow-100 text-yellow-800">2nd Triad<br>Medium</th>
+                            <th class="p-2 border text-center font-medium bg-green-100 text-green-800">3rd Triad<br>Auspicious</th>
+                            <!-- Krishna Paksha Headers -->
+                            <th class="p-2 border text-center font-medium bg-green-100 text-green-800">1st Triad<br>Auspicious</th>
+                            <th class="p-2 border text-center font-medium bg-yellow-100 text-yellow-800">2nd Triad<br>Medium</th>
+                            <th class="p-2 border text-center font-medium bg-red-100 text-red-800">3rd Triad<br>Inauspicious</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-3 border font-medium">Nanda</td>
+                            <td class="p-2 border text-center">1</td>
+                            <td class="p-2 border text-center">6</td>
+                            <td class="p-2 border text-center">11</td>
+                            <td class="p-2 border text-center">1</td>
+                            <td class="p-2 border text-center">6</td>
+                            <td class="p-2 border text-center">11</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="p-3 border font-medium">Bhadra</td>
+                            <td class="p-2 border text-center">2</td>
+                            <td class="p-2 border text-center">7</td>
+                            <td class="p-2 border text-center">12</td>
+                            <td class="p-2 border text-center">2</td>
+                            <td class="p-2 border text-center">7</td>
+                            <td class="p-2 border text-center">12</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border font-medium">Jaya</td>
+                            <td class="p-2 border text-center">3</td>
+                            <td class="p-2 border text-center">8</td>
+                            <td class="p-2 border text-center">13</td>
+                            <td class="p-2 border text-center">3</td>
+                            <td class="p-2 border text-center">8</td>
+                            <td class="p-2 border text-center">13</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="p-3 border font-medium">Rikta</td>
+                            <td class="p-2 border text-center">4</td>
+                            <td class="p-2 border text-center">9</td>
+                            <td class="p-2 border text-center">14</td>
+                            <td class="p-2 border text-center">4</td>
+                            <td class="p-2 border text-center">9</td>
+                            <td class="p-2 border text-center">14</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border font-medium">Poorva</td>
+                            <td class="p-2 border text-center">5</td>
+                            <td class="p-2 border text-center">10</td>
+                            <td class="p-2 border text-center">15</td>
+                            <td class="p-2 border text-center">5</td>
+                            <td class="p-2 border text-center">10</td>
+                            <td class="p-2 border text-center">15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tithi Names Reference -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Tithi Names & Ruling Planets</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-2 text-center font-semibold">#</th>
+                            <th class="p-2 text-left font-semibold bg-blue-50">Śukla Pakṣa Name</th>
+                            <th class="p-2 text-center font-semibold bg-blue-50">Lord</th>
+                            <th class="p-2 text-left font-semibold bg-gray-100">Kṛṣṇa Pakṣa Name</th>
+                            <th class="p-2 text-center font-semibold bg-gray-100">Lord</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tithi-names-body">
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Correct Tithi Data Structure
+        const tithiData = {
+            // Tithi Type and Triad mapping
+            triadMapping: {
+                // Each tithi number maps to {type, triad}
+                1: { type: 'Nanda', triad: 1 },
+                2: { type: 'Bhadra', triad: 1 },
+                3: { type: 'Jaya', triad: 1 },
+                4: { type: 'Rikta', triad: 1 },
+                5: { type: 'Poorva', triad: 1 },
+                6: { type: 'Nanda', triad: 2 },
+                7: { type: 'Bhadra', triad: 2 },
+                8: { type: 'Jaya', triad: 2 },
+                9: { type: 'Rikta', triad: 2 },
+                10: { type: 'Poorva', triad: 2 },
+                11: { type: 'Nanda', triad: 3 },
+                12: { type: 'Bhadra', triad: 3 },
+                13: { type: 'Jaya', triad: 3 },
+                14: { type: 'Rikta', triad: 3 },
+                15: { type: 'Poorva', triad: 3 }
+            },
+
+            // Tithi Names and Ruling Planets
+            tithiNames: {
+                sukla: [
+                    { number: 1, name: 'Pratipada', lord: 'Su' },
+                    { number: 2, name: 'Dvitīya', lord: 'Mo' },
+                    { number: 3, name: 'Tritīya', lord: 'Ma' },
+                    { number: 4, name: 'Caturthī', lord: 'Me' },
+                    { number: 5, name: 'Pañcamī', lord: 'Ju' },
+                    { number: 6, name: 'Ṣaṣṭhī', lord: 'Ve' },
+                    { number: 7, name: 'Saptamī', lord: 'Sa' },
+                    { number: 8, name: 'Aṣṭamī', lord: 'Ra' },
+                    { number: 9, name: 'Navamī', lord: 'Su' },
+                    { number: 10, name: 'Daśamī', lord: 'Mo' },
+                    { number: 11, name: 'Ekādaśī', lord: 'Ma' },
+                    { number: 12, name: 'Dvādaśī', lord: 'Me' },
+                    { number: 13, name: 'Trayodaśī', lord: 'Ju' },
+                    { number: 14, name: 'Caturdaśī', lord: 'Ve' },
+                    { number: 15, name: 'Pūrṇimā', lord: 'Sa' }
+                ],
+                krishna: [
+                    { number: 1, name: 'Pratipada', lord: 'Su' },
+                    { number: 2, name: 'Dvitīya', lord: 'Mo' },
+                    { number: 3, name: 'Tritīya', lord: 'Ma' },
+                    { number: 4, name: 'Caturthī', lord: 'Me' },
+                    { number: 5, name: 'Pañcamī', lord: 'Ju' },
+                    { number: 6, name: 'Ṣaṣṭhī', lord: 'Ve' },
+                    { number: 7, name: 'Saptamī', lord: 'Sa' },
+                    { number: 8, name: 'Aṣṭamī', lord: 'Ra' },
+                    { number: 9, name: 'Navamī', lord: 'Su' },
+                    { number: 10, name: 'Daśamī', lord: 'Mo' },
+                    { number: 11, name: 'Ekādaśī', lord: 'Ma' },
+                    { number: 12, name: 'Dvādaśī', lord: 'Me' },
+                    { number: 13, name: 'Trayodaśī', lord: 'Ju' },
+                    { number: 14, name: 'Caturdaśī', lord: 'Ve' },
+                    { number: 15, name: 'Amāvāsya', lord: 'Ra' }
+                ]
+            },
+
+            // Planet full names
+            planetNames: {
+                'Su': 'Sun', 'Mo': 'Moon', 'Ma': 'Mars', 'Me': 'Mercury',
+                'Ju': 'Jupiter', 'Ve': 'Venus', 'Sa': 'Saturn', 'Ra': 'Rahu'
+            }
+        };
+
+        // Initialize
+        let currentPaksha = 'sukla';
+
+        // DOM Elements
+        const suklaBtn = document.getElementById('sukla-btn');
+        const krishnaBtn = document.getElementById('krishna-btn');
+        const tithiNumberSelect = document.getElementById('tithi-number');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultsSection = document.getElementById('results-section');
+        const tithiNamesBody = document.getElementById('tithi-names-body');
+
+        // Initialize Tithi Names Table
+        function initTithiNamesTable() {
+            for (let i = 0; i < 15; i++) {
+                const row = document.createElement('tr');
+                row.className = i % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                
+                row.innerHTML = `
+                    <td class="p-2 text-center font-medium border">${i + 1}</td>
+                    <td class="p-2 border">${tithiData.tithiNames.sukla[i].name}</td>
+                    <td class="p-2 text-center border">
+                        <span class="planet-${tithiData.tithiNames.sukla[i].lord.toLowerCase()} px-2 py-1 rounded text-xs font-bold">
+                            ${tithiData.tithiNames.sukla[i].lord}
+                        </span>
+                    </td>
+                    <td class="p-2 border">${tithiData.tithiNames.krishna[i].name}</td>
+                    <td class="p-2 text-center border">
+                        <span class="planet-${tithiData.tithiNames.krishna[i].lord.toLowerCase()} px-2 py-1 rounded text-xs font-bold">
+                            ${tithiData.tithiNames.krishna[i].lord}
+                        </span>
+                    </td>
+                `;
+                tithiNamesBody.appendChild(row);
+            }
+        }
+
+        // Get Quality based on paksha and triad
+        function getQuality(paksha, triad) {
+            if (paksha === 'sukla') {
+                if (triad === 1) return 'Inauspicious';
+                if (triad === 2) return 'Medium';
+                if (triad === 3) return 'Auspicious';
+            } else { // krishna
+                if (triad === 1) return 'Auspicious';
+                if (triad === 2) return 'Medium';
+                if (triad === 3) return 'Inauspicious';
+            }
+            return 'Unknown';
+        }
+
+        // Calculate and Display Results
+        function calculateTithi() {
+            const tithiNumber = parseInt(tithiNumberSelect.value);
+            
+            if (!tithiNumber) {
+                alert('Please select a tithi number');
+                return;
+            }
+
+            const pakshaData = tithiData.tithiNames[currentPaksha];
+            const tithiInfo = pakshaData.find(t => t.number === tithiNumber);
+            const triadInfo = tithiData.triadMapping[tithiNumber];
+            const quality = getQuality(currentPaksha, triadInfo.triad);
+
+            // Update Results
+            document.getElementById('result-tithi-number').textContent = tithiNumber;
+            document.getElementById('result-tithi-name').textContent = tithiInfo.name;
+            document.getElementById('result-tithi-type').textContent = triadInfo.type;
+            document.getElementById('result-triad').textContent = `${triadInfo.triad}${getOrdinalSuffix(triadInfo.triad)} Triad`;
+            document.getElementById('result-quality').textContent = quality;
+            document.getElementById('result-planet').textContent = `${tithiData.planetNames[tithiInfo.lord]} (${tithiInfo.lord})`;
+
+            // Update Complete Info
+            document.getElementById('complete-info').innerHTML = `
+                <div><strong>Paksha:</strong> ${currentPaksha === 'sukla' ? 'Śukla Pakṣa (Bright Half)' : 'Kṛṣṇa Pakṣa (Dark Half)'}</div>
+                <div><strong>Tithi:</strong> ${tithiInfo.name} (${tithiNumber})</div>
+                <div><strong>Type:</strong> ${triadInfo.type}</div>
+                <div><strong>Triad:</strong> ${triadInfo.triad}${getOrdinalSuffix(triadInfo.triad)} Position</div>
+                <div><strong>Quality:</strong> ${quality}</div>
+                <div><strong>Ruling Planet:</strong> ${tithiData.planetNames[tithiInfo.lord]}</div>
+            `;
+
+            // Update Quality Card Styling
+            const qualityCard = document.getElementById('quality-card');
+            qualityCard.className = 'p-4 rounded-lg border-2 ';
+            if (quality === 'Auspicious') {
+                qualityCard.classList.add('bg-green-100', 'border-green-500');
+                qualityCard.querySelector('.text-sm').className = 'text-sm font-medium text-green-800';
+                qualityCard.querySelector('#result-quality').className = 'text-xl font-bold text-green-800';
+            } else if (quality === 'Medium') {
+                qualityCard.classList.add('bg-yellow-100', 'border-yellow-500');
+                qualityCard.querySelector('.text-sm').className = 'text-sm font-medium text-yellow-800';
+                qualityCard.querySelector('#result-quality').className = 'text-xl font-bold text-yellow-800';
+            } else {
+                qualityCard.classList.add('bg-red-100', 'border-red-500');
+                qualityCard.querySelector('.text-sm').className = 'text-sm font-medium text-red-800';
+                qualityCard.querySelector('#result-quality').className = 'text-xl font-bold text-red-800';
+            }
+
+            // Show Results
+            resultsSection.classList.remove('hidden');
+        }
+
+        // Helper function for ordinal suffixes
+        function getOrdinalSuffix(number) {
+            if (number === 1) return 'st';
+            if (number === 2) return 'nd';
+            if (number === 3) return 'rd';
+            return 'th';
+        }
+
+        // Event Listeners
+        suklaBtn.addEventListener('click', () => {
+            currentPaksha = 'sukla';
+            suklaBtn.classList.add('bg-blue-100', 'border-blue-500', 'text-blue-700');
+            suklaBtn.classList.remove('bg-gray-100', 'border-gray-300', 'text-gray-600');
+            krishnaBtn.classList.add('bg-gray-100', 'border-gray-300', 'text-gray-600');
+            krishnaBtn.classList.remove('bg-blue-100', 'border-blue-500', 'text-blue-700');
+        });
+
+        krishnaBtn.addEventListener('click', () => {
+            currentPaksha = 'krishna';
+            krishnaBtn.classList.add('bg-blue-100', 'border-blue-500', 'text-blue-700');
+            krishnaBtn.classList.remove('bg-gray-100', 'border-gray-300', 'text-gray-600');
+            suklaBtn.classList.add('bg-gray-100', 'border-gray-300', 'text-gray-600');
+            suklaBtn.classList.remove('bg-blue-100', 'border-blue-500', 'text-blue-700');
+        });
+
+        calculateBtn.addEventListener('click', calculateTithi);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTithiNamesTable();
+            // Trigger Sukla by default
+            suklaBtn.click();
+        });
+    </script>
+</body>
+</html>
