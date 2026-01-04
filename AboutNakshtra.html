@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>27 Nakshatra Attributes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4ff 0%, #fdf2ff 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .header h1:after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            bottom: -10px;
+            left: 20%;
+            border-radius: 2px;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 20px auto 0;
+            line-height: 1.6;
+        }
+
+        .selection-area {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .selection-area:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+        }
+
+        .selection-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .selection-label i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .star-select {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background-color: var(--light);
+            color: var(--dark);
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .star-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        .star-select option {
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease-out;
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .nakshatra-name {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .symbol-badge {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .symbol-badge i {
+            margin-right: 8px;
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .attribute-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .attribute-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .attribute-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .attribute-label i {
+            margin-right: 8px;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .attribute-value {
+            font-size: 1.3rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+
+        .planet-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nakshatra-name {
+                font-size: 1.8rem;
+            }
+            
+            .attributes-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .selection-area, .card {
+                padding: 20px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .symbol-badge {
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .star-select {
+                padding: 16px;
+                font-size: 1rem;
+            }
+            
+            .attribute-value {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>27 Nakshatra Attributes</h1>
+            <p>Explore the unique characteristics and symbolism of each Nakshatra (lunar mansion) in Vedic astrology. Select a Nakshatra to view its attributes.</p>
+        </div>
+        
+        <div class="selection-area">
+            <div class="selection-label">
+                <i class="fas fa-star"></i>
+                Select a Nakshatra
+            </div>
+            <select id="starSelect" class="star-select" onchange="showData()">
+                <option value="">Choose a Nakshatra...</option>
+            </select>
+        </div>
+        
+        <div id="output" class="card">
+            <!-- Card content will be dynamically inserted here -->
+        </div>
+        
+        <div class="footer">
+            <p>Based on Vedic Astrology • Data sourced from classical texts</p>
+        </div>
+    </div>
+
+    <script>
+        const data = [
+            { name:"Ashwini", symbol:"Horse Head", yoni:"Male Horse", diety:"Ashwini Kumars", gana:"Deva", animal:"Horse", tree:"Kuchala", bird:"Hawk", sound:"Neigh", element:"Earth", planet:"Ketu", varna:"Kshatriya", purushartha:"Dharma" },
+            { name:"Bharani", symbol:"Yoni", yoni:"Male Elephant", diety:"Yama", gana:"Manushya", animal:"Elephant", tree:"Amla", bird:"Crow", sound:"Trumpet", element:"Fire", planet:"Venus", varna:"Shudra", purushartha:"Artha" },
+            { name:"Krittika", symbol:"Flame", yoni:"Female Goat", diety:"Agni", gana:"Deva", animal:"She-Goat", tree:"Fig", bird:"Peacock", sound:"Crackle", element:"Fire", planet:"Sun", varna:"Brahmin", purushartha:"Dharma" },
+            { name:"Rohini", symbol:"Chariot", yoni:"Female Serpent", diety:"Brahma", gana:"Manushya", animal:"Serpent", tree:"Jamun", bird:"Owl", sound:"Flute", element:"Water", planet:"Moon", varna:"Vaishya", purushartha:"Kama" },
+            { name:"Mrigashira", symbol:"Deer Head", yoni:"Male Deer", diety:"Soma", gana:"Deva", animal:"Male Deer", tree:"Khair", bird:"Eagle", sound:"Forest rustle", element:"Earth", planet:"Mars", varna:"Kshatriya", purushartha:"Kama" },
+            { name:"Ardra", symbol:"Teardrop", yoni:"Female Dog", diety:"Rudra", gana:"Asura", animal:"Female Dog", tree:"Rudraksha", bird:"Vulture", sound:"Thunder", element:"Air", planet:"Rahu", varna:"Shudra", purushartha:"Moksha" },
+            { name:"Punarvasu", symbol:"Bow", yoni:"Cat", diety:"Aditi", gana:"Deva", animal:"Cat", tree:"Bamboo", bird:"Swan", sound:"Bell", element:"Air", planet:"Jupiter", varna:"Brahmin", purushartha:"Dharma" },
+            { name:"Pushya", symbol:"Udder", yoni:"Sheep", diety:"Brihaspati", gana:"Deva", animal:"Sheep", tree:"Peepal", bird:"Crane", sound:"Mantra", element:"Water", planet:"Saturn", varna:"Brahmin", purushartha:"Dharma" },
+            { name:"Ashlesha", symbol:"Coiled Snake", yoni:"Male Serpent", diety:"Naga", gana:"Asura", animal:"Snake", tree:"Nagkesar", bird:"Serpent Eagle", sound:"Hiss", element:"Water", planet:"Mercury", varna:"Shudra", purushartha:"Moksha" },
+            { name:"Magha", symbol:"Throne", yoni:"Male Rat", diety:"Pitrs", gana:"Manushya", animal:"Rat", tree:"Banyan", bird:"Kingfisher", sound:"Drum", element:"Earth", planet:"Ketu", varna:"Kshatriya", purushartha:"Artha" },
+            { name:"Purva Phalguni", symbol:"Bed Front", yoni:"Female Rat", diety:"Bhaga", gana:"Manushya", animal:"Female Rat", tree:"Ashoka", bird:"Bulbul", sound:"Water laugh", element:"Water", planet:"Venus", varna:"Brahmin", purushartha:"Kama" },
+            { name:"Uttara Phalguni", symbol:"Bed Back", yoni:"Cow", diety:"Aryaman", gana:"Manushya", animal:"Cow", tree:"Neem", bird:"Sparrow", sound:"Marriage chants", element:"Earth", planet:"Sun", varna:"Kshatriya", purushartha:"Dharma" },
+            { name:"Hasta", symbol:"Hand", yoni:"Buffalo", diety:"Savitar", gana:"Manushya", animal:"Buffalo", tree:"Arjuna", bird:"Parrot", sound:"Clap", element:"Earth", planet:"Moon", varna:"Vaishya", purushartha:"Artha" },
+            { name:"Chitra", symbol:"Gem", yoni:"Female Tiger", diety:"Vishwakarma", gana:"Manushya", animal:"Tiger", tree:"Bilva", bird:"Woodpecker", sound:"Tool tink", element:"Fire", planet:"Mars", varna:"Vaishya", purushartha:"Artha" },
+            { name:"Swati", symbol:"Coral", yoni:"Male Buffalo", diety:"Vayu", gana:"Deva", animal:"Buffalo", tree:"Kadamba", bird:"Nightjar", sound:"Wind", element:"Air", planet:"Rahu", varna:"Shudra", purushartha:"Moksha" },
+            { name:"Vishakha", symbol:"Arch", yoni:"Male Tiger", diety:"Indra-Agni", gana:"Asura", animal:"Tiger", tree:"Nagkesar", bird:"Eagle", sound:"Roar", element:"Fire", planet:"Jupiter", varna:"Kshatriya", purushartha:"Artha" },
+            { name:"Anuradha", symbol:"Lotus", yoni:"Female Deer", diety:"Mitra", gana:"Deva", animal:"Deer", tree:"Vakula", bird:"Koel", sound:"Alliance hum", element:"Water", planet:"Saturn", varna:"Shudra", purushartha:"Dharma" },
+            { name:"Jyeshtha", symbol:"Earring", yoni:"Male Deer", diety:"Indra", gana:"Asura", animal:"Male Deer", tree:"Siris", bird:"Jay", sound:"Command", element:"Air", planet:"Mercury", varna:"Shudra", purushartha:"Dharma" },
+            { name:"Mula", symbol:"Root", yoni:"Dog", diety:"Nirriti", gana:"Asura", animal:"Dog", tree:"Sal", bird:"Ostrich", sound:"Rumble", element:"Fire", planet:"Ketu", varna:"Kshatriya", purushartha:"Moksha" },
+            { name:"Purva Ashadha", symbol:"Tusk", yoni:"Monkey", diety:"Apah", gana:"Manushya", animal:"Monkey", tree:"Mango", bird:"Eagle", sound:"Conch", element:"Water", planet:"Venus", varna:"Vaishya", purushartha:"Artha" },
+            { name:"Uttara Ashadha", symbol:"Tusk", yoni:"Mongoose", diety:"Vishvadevas", gana:"Deva", animal:"Mongoose", tree:"Jackfruit", bird:"Myna", sound:"Conch echo", element:"Earth", planet:"Sun", varna:"Kshatriya", purushartha:"Dharma" },
+            { name:"Shravana", symbol:"Ear", yoni:"Female Monkey", diety:"Vishnu", gana:"Deva", animal:"Female Monkey", tree:"Arka", bird:"Eagle", sound:"Om", element:"Air", planet:"Moon", varna:"Brahmin", purushartha:"Moksha" },
+            { name:"Dhanishta", symbol:"Drum", yoni:"Lion", diety:"Vasus", gana:"Asura", animal:"Lion", tree:"Shami", bird:"Hawk", sound:"Drum beat", element:"Earth", planet:"Mars", varna:"Kshatriya", purushartha:"Artha" },
+            { name:"Shatabhisha", symbol:"Circle", yoni:"Female Horse", diety:"Varuna", gana:"Asura", animal:"Horse", tree:"Kadamba", bird:"Hawk", sound:"Rain rhythm", element:"Ether", planet:"Rahu", varna:"Shudra", purushartha:"Moksha" },
+            { name:"Purva Bhadrapada", symbol:"Sword", yoni:"Male Lion", diety:"Aja Ekapada", gana:"Asura", animal:"Male Lion", tree:"Mango", bird:"Hawk", sound:"Hiss", element:"Fire", planet:"Jupiter", varna:"Brahmin", purushartha:"Moksha" },
+            { name:"Uttara Bhadrapada", symbol:"Bed", yoni:"Cow", diety:"Ahir Budhnya", gana:"Deva", animal:"Cow", tree:"Neem", bird:"Swan", sound:"Serpent chant", element:"Water", planet:"Saturn", varna:"Kshatriya", purushartha:"Dharma" },
+            { name:"Revati", symbol:"Fish", yoni:"Female Elephant", diety:"Pushan", gana:"Deva", animal:"Female Elephant", tree:"Mahua", bird:"Hawk", sound:"Ocean hum", element:"Water", planet:"Mercury", varna:"Shudra", purushartha:"Moksha" }
+        ];
+
+        // Populate dropdown
+        const starSelect = document.getElementById('starSelect');
+        data.forEach(s => {
+            starSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+        });
+
+        // Function to show selected Nakshatra data
+        function showData() {
+            const selectedName = starSelect.value;
+            const s = data.find(x => x.name === selectedName);
+            const output = document.getElementById('output');
+            
+            if (!s) {
+                output.innerHTML = '';
+                output.classList.remove('active');
+                return;
+            }
+            
+            // Get appropriate icons for each attribute
+            const getIcon = (attribute) => {
+                const icons = {
+                    symbol: 'fas fa-shapes',
+                    yoni: 'fas fa-paw',
+                    diety: 'fas fa-user-circle',
+                    gana: 'fas fa-users',
+                    animal: 'fas fa-dog',
+                    tree: 'fas fa-tree',
+                    bird: 'fas fa-dove',
+                    sound: 'fas fa-volume-up',
+                    element: 'fas fa-fire',
+                    planet: 'fas fa-globe',
+                    varna: 'fas fa-medal',
+                    purushartha: 'fas fa-star-and-crescent'
+                };
+                return icons[attribute] || 'fas fa-circle';
+            };
+            
+            // Create the card HTML
+            output.innerHTML = `
+                <div class="card-header">
+                    <div class="nakshatra-name">${s.name}</div>
+                    <div class="symbol-badge">
+                        <i class="fas fa-symbol"></i> ${s.symbol}
+                    </div>
+                </div>
+                <div class="attributes-grid">
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('yoni')}"></i> Yoni
+                        </div>
+                        <div class="attribute-value">${s.yoni}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('diety')}"></i> Deity
+                        </div>
+                        <div class="attribute-value">${s.diety}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('gana')}"></i> Gana
+                        </div>
+                        <div class="attribute-value">${s.gana}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('animal')}"></i> Animal
+                        </div>
+                        <div class="attribute-value">${s.animal}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('tree')}"></i> Tree
+                        </div>
+                        <div class="attribute-value">${s.tree}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('bird')}"></i> Bird
+                        </div>
+                        <div class="attribute-value">${s.bird}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('sound')}"></i> Sound
+                        </div>
+                        <div class="attribute-value">${s.sound}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('element')}"></i> Element
+                        </div>
+                        <div class="attribute-value">${s.element}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('planet')}"></i> Planet
+                        </div>
+                        <div class="attribute-value">${s.planet}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('varna')}"></i> Varna
+                        </div>
+                        <div class="attribute-value">${s.varna}</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-label">
+                            <i class="${getIcon('purushartha')}"></i> Purushartha
+                        </div>
+                        <div class="attribute-value">${s.purushartha}</div>
+                    </div>
+                </div>
+            `;
+            
+            output.classList.add('active');
+        }
+        
+        // Show a random Nakshatra on page load for demo purposes
+        window.onload = function() {
+            // Select a random Nakshatra
+            const randomIndex = Math.floor(Math.random() * data.length);
+            starSelect.value = data[randomIndex].name;
+            showData();
+        };
+    </script>
+</body>
+</html>
