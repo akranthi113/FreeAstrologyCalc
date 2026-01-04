@@ -1,84 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ascendent Malefics and Benefics Finder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascendant Malefics and Benefics Finder</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  body {
-    font-family: Poppins, sans-serif;
-    background: #f0f4f8;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-  }
-  .container {
-    width: 460px;
-    margin-top: 40px;
-  }
-  .card {
-    background: white;
-    padding: 22px;
-    border-radius: 14px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.07);
-    margin-bottom: 25px;
-  }
-  h2 {
-    text-align: center;
-    font-weight: 600;
-    font-size: 20px;
-    color: #2c3e50;
-    margin-bottom: 15px;
-  }
-  label { font-weight: 500; color: #34495e; }
-  select, button {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #dfe6e9;
-    border-radius: 10px;
-    font-size: 15px;
-    margin-top: 8px;
-    outline: none;
-    cursor: pointer;
-    background: #fff;
-    transition: 0.2s;
-  }
-  select:hover { border-color: #b2bec3; }
-  button {
-    background: #0984e3;
-    color: white;
-    font-weight: 600;
-    border: none;
-  }
-  button:hover { background: #0673c7; }
-  .result-box {
-    margin-top: 18px;
-    background: #e8eef3;
-    padding: 15px;
-    border-radius: 10px;
-    border-left: 5px solid #74b9ff;
-    animation: fadeIn 0.3s ease-in;
-    font-size: 15px;
-  }
-  .row { margin-bottom: 8px; }
-  .label { font-weight: 600; color: #2c3e50; }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f0f4f8;
+  margin: 0;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+h2 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: 500;
+  color: #34495e;
+  font-size: 14px;
+}
+
+select, button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  margin-top: 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+select {
+  border: 2px solid #dfe6e9;
+  background: #fff;
+}
+
+select:focus {
+  border-color: #74b9ff;
+}
+
+button {
+  background: #0984e3;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  background: #0673c7;
+}
+
+.result-box {
+  margin-top: 18px;
+  background: #eef3f7;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 5px solid #74b9ff;
+  animation: fadeIn 0.3s ease-in;
+  font-size: 14px;
+}
+
+.row {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 📱 Extra mobile tuning */
+@media (max-width: 400px) {
+  h2 { font-size: 16px; }
+  select, button { font-size: 14px; padding: 12px; }
+  .result-box { font-size: 13px; }
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
 
-  <!-- Ascendant Finder Card -->
+  <!-- Ascendant Finder -->
   <div class="card">
-    <h2>Ascendent Malefics and Benefics Finder</h2>
-    <label for="lagnaSelect">Select Lagna:</label>
+    <h2>Ascendant Malefics & Benefics</h2>
+
+    <label for="lagnaSelect">Select Lagna</label>
     <select id="lagnaSelect" onchange="showKaraka()">
       <option value="">Choose Ascendant</option>
       <option>Aries (Mesh)</option>
@@ -102,169 +147,77 @@
     </div>
   </div>
 
-  <!-- Planet Relations Card -->
+  <!-- Planet Relations -->
   <div class="card">
     <h2>Planet Natural Relations</h2>
-    <label for="planetSelect">Select Planet:</label>
+
+    <label for="planetSelect">Select Planet</label>
     <select id="planetSelect">
       <option value="">Choose Planet</option>
-      <option value="Sun">Sun</option>
-      <option value="Moon">Moon</option>
-      <option value="Mars">Mars</option>
-      <option value="Mercury">Mercury</option>
-      <option value="Jupiter">Jupiter</option>
-      <option value="Venus">Venus</option>
-      <option value="Saturn">Saturn</option>
-      <option value="Rahu">Rahu</option>
-      <option value="Ketu">Ketu</option>
+      <option>Sun</option>
+      <option>Moon</option>
+      <option>Mars</option>
+      <option>Mercury</option>
+      <option>Jupiter</option>
+      <option>Venus</option>
+      <option>Saturn</option>
+      <option>Rahu</option>
+      <option>Ketu</option>
     </select>
 
     <button onclick="showRelations()">Show Relations</button>
+
     <div id="planetOutput" class="result-box" style="display:none;"></div>
   </div>
 
 </div>
 
 <script>
-/* Ascendant Karaka Data */
 const karakaData = {
-  "Aries (Mesh)": {
-    yogakaraka: "Mars",
-    benefics: "Sun, Jupiter, Moon",
-    malefics: "Venus, Saturn, Mercury"
-  },
-  "Taurus (Vrishabha)": {
-    yogakaraka: "Saturn",
-    benefics: "Mercury, Venus, Saturn, Moon",
-    malefics: "Sun, Mars, Jupiter"
-  },
-  "Gemini (Mithun)": {
-    yogakaraka: "Venus",
-    benefics: "Mercury, Venus, Jupiter",
-    malefics: "Sun, Mars, Saturn, Moon"
-  },
-  "Cancer (Karka)": {
-    yogakaraka: "Mars",
-    benefics: "Moon, Jupiter, Sun",
-    malefics: "Venus, Mercury, Saturn"
-  },
-  "Leo (Simha)": {
-    yogakaraka: "Mars",
-    benefics: "Sun, Moon, Mars, Jupiter",
-    malefics: "Venus, Saturn, Mercury"
-  },
-  "Virgo (Kanya)": {
-    yogakaraka: "Venus",
-    benefics: "Mercury, Venus",
-    malefics: "Sun, Moon, Mars, Jupiter, Saturn"
-  },
-  "Libra (Tula)": {
-    yogakaraka: "Saturn",
-    benefics: "Venus, Mercury, Saturn",
-    malefics: "Sun, Moon, Mars, Jupiter"
-  },
-  "Scorpio (Vrishchik)": {
-    yogakaraka: "Moon",
-    benefics: "Moon, Sun, Jupiter",
-    malefics: "Venus, Mercury, Saturn, Mars"
-  },
-  "Sagittarius (Dhanu)": {
-    yogakaraka: "Sun",
-    benefics: "Sun, Moon, Mars, Jupiter",
-    malefics: "Venus, Saturn, Mercury"
-  },
-  "Capricorn (Makar)": {
-    yogakaraka: "Venus",
-    benefics: "Venus, Mercury, Saturn",
-    malefics: "Sun, Moon, Mars, Jupiter"
-  },
-  "Aquarius (Kumbha)": {
-    yogakaraka: "Venus",
-    benefics: "Venus, Mercury, Saturn",
-    malefics: "Sun, Moon, Mars, Jupiter"
-  },
-  "Pisces (Meen)": {
-    yogakaraka: "Mars",
-    benefics: "Jupiter, Moon, Mars",
-    malefics: "Sun, Venus, Saturn, Mercury"
-  }
+  "Aries (Mesh)": { yogakaraka:"Mars", benefics:"Sun, Jupiter, Moon", malefics:"Venus, Saturn, Mercury" },
+  "Taurus (Vrishabha)": { yogakaraka:"Saturn", benefics:"Mercury, Venus, Saturn, Moon", malefics:"Sun, Mars, Jupiter" },
+  "Gemini (Mithun)": { yogakaraka:"Venus", benefics:"Mercury, Venus, Jupiter", malefics:"Sun, Mars, Saturn, Moon" },
+  "Cancer (Karka)": { yogakaraka:"Mars", benefics:"Moon, Jupiter, Sun", malefics:"Venus, Mercury, Saturn" },
+  "Leo (Simha)": { yogakaraka:"Mars", benefics:"Sun, Moon, Mars, Jupiter", malefics:"Venus, Saturn, Mercury" },
+  "Virgo (Kanya)": { yogakaraka:"Venus", benefics:"Mercury, Venus", malefics:"Sun, Moon, Mars, Jupiter, Saturn" },
+  "Libra (Tula)": { yogakaraka:"Saturn", benefics:"Venus, Mercury, Saturn", malefics:"Sun, Moon, Mars, Jupiter" },
+  "Scorpio (Vrishchik)": { yogakaraka:"Moon", benefics:"Moon, Sun, Jupiter", malefics:"Venus, Mercury, Saturn, Mars" },
+  "Sagittarius (Dhanu)": { yogakaraka:"Sun", benefics:"Sun, Moon, Mars, Jupiter", malefics:"Venus, Saturn, Mercury" },
+  "Capricorn (Makar)": { yogakaraka:"Venus", benefics:"Venus, Mercury, Saturn", malefics:"Sun, Moon, Mars, Jupiter" },
+  "Aquarius (Kumbha)": { yogakaraka:"Venus", benefics:"Venus, Mercury, Saturn", malefics:"Sun, Moon, Mars, Jupiter" },
+  "Pisces (Meen)": { yogakaraka:"Mars", benefics:"Jupiter, Moon, Mars", malefics:"Sun, Venus, Saturn, Mercury" }
 };
 
 function showKaraka() {
-  const asc = document.getElementById("lagnaSelect").value;
-  if (!asc || !karakaData[asc]) {
-    document.getElementById("result").style.display = "none";
-    return;
-  }
-  const data = karakaData[asc];
-  document.getElementById("yogakaraka").innerText = data.yogakaraka;
-  document.getElementById("benefics").innerText = data.benefics;
-  document.getElementById("malefics").innerText = data.malefics;
-  document.getElementById("result").style.display = "block";
+  const asc = lagnaSelect.value;
+  if (!karakaData[asc]) return result.style.display="none";
+  yogakaraka.textContent = karakaData[asc].yogakaraka;
+  benefics.textContent = karakaData[asc].benefics;
+  malefics.textContent = karakaData[asc].malefics;
+  result.style.display = "block";
 }
 
-/* Planet Natural Relations Data */
 const planetData = {
-  "Sun": {
-    friendly: ["Moon", "Mars", "Jupiter"],
-    enemy: ["Venus", "Saturn", "Rahu"],
-    neutral: ["Mercury", "Ketu"]
-  },
-  "Moon": {
-    friendly: ["Sun", "Mercury"],
-    enemy: [],
-    neutral: ["Mars", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"]
-  },
-  "Mars": {
-    friendly: ["Sun", "Moon", "Jupiter"],
-    enemy: ["Mercury"],
-    neutral: ["Venus", "Saturn", "Rahu", "Ketu"]
-  },
-  "Mercury": {
-    friendly: ["Sun", "Venus"],
-    enemy: ["Moon", "Ketu"],
-    neutral: ["Mars", "Jupiter", "Saturn", "Rahu"]
-  },
-  "Jupiter": {
-    friendly: ["Sun", "Moon", "Mars"],
-    enemy: ["Mercury", "Venus", "Rahu"],
-    neutral: ["Saturn", "Ketu"]
-  },
-  "Venus": {
-    friendly: ["Mercury", "Saturn", "Rahu"],
-    enemy: ["Sun", "Moon"],
-    neutral: ["Mars", "Jupiter", "Ketu"]
-  },
-  "Saturn": {
-    friendly: ["Mercury", "Venus", "Rahu"],
-    enemy: ["Sun", "Moon", "Mars"],
-    neutral: ["Jupiter", "Ketu"]
-  },
-  "Rahu": {
-    friendly: ["Venus", "Saturn"],
-    enemy: ["Sun", "Moon", "Mars"],
-    neutral: ["Mercury", "Jupiter", "Ketu"]
-  },
-  "Ketu": {
-    friendly: ["Sun", "Mars"],
-    enemy: ["Venus", "Saturn"],
-    neutral: ["Mercury", "Jupiter", "Moon", "Rahu"]
-  }
+  Sun:{friendly:["Moon","Mars","Jupiter"],enemy:["Venus","Saturn","Rahu"],neutral:["Mercury","Ketu"]},
+  Moon:{friendly:["Sun","Mercury"],enemy:[],neutral:["Mars","Jupiter","Venus","Saturn","Rahu","Ketu"]},
+  Mars:{friendly:["Sun","Moon","Jupiter"],enemy:["Mercury"],neutral:["Venus","Saturn","Rahu","Ketu"]},
+  Mercury:{friendly:["Sun","Venus"],enemy:["Moon","Ketu"],neutral:["Mars","Jupiter","Saturn","Rahu"]},
+  Jupiter:{friendly:["Sun","Moon","Mars"],enemy:["Mercury","Venus","Rahu"],neutral:["Saturn","Ketu"]},
+  Venus:{friendly:["Mercury","Saturn","Rahu"],enemy:["Sun","Moon"],neutral:["Mars","Jupiter","Ketu"]},
+  Saturn:{friendly:["Mercury","Venus","Rahu"],enemy:["Sun","Moon","Mars"],neutral:["Jupiter","Ketu"]},
+  Rahu:{friendly:["Venus","Saturn"],enemy:["Sun","Moon","Mars"],neutral:["Mercury","Jupiter","Ketu"]},
+  Ketu:{friendly:["Sun","Mars"],enemy:["Venus","Saturn"],neutral:["Mercury","Jupiter","Moon","Rahu"]}
 };
 
 function showRelations() {
-  const planet = document.getElementById("planetSelect").value;
-  if (!planet || !planetData[planet]) {
-    document.getElementById("planetOutput").style.display = "none";
-    return;
-  }
-  const data = planetData[planet];
-  document.getElementById("planetOutput").innerHTML = `
-    <div class="row"><span class="label">Friendly:</span> ${data.friendly.join(", ") || "None"}</div>
-    <div class="row"><span class="label">Enemy:</span> ${data.enemy.join(", ") || "None"}</div>
-    <div class="row"><span class="label">Neutral:</span> ${data.neutral.join(", ") || "None"}</div>
-  `;
-  document.getElementById("planetOutput").style.display = "block";
+  const p = planetSelect.value;
+  if (!planetData[p]) return planetOutput.style.display="none";
+  const d = planetData[p];
+  planetOutput.innerHTML = `
+    <div class="row"><span class="label">Friendly:</span> ${d.friendly.join(", ")||"None"}</div>
+    <div class="row"><span class="label">Enemy:</span> ${d.enemy.join(", ")||"None"}</div>
+    <div class="row"><span class="label">Neutral:</span> ${d.neutral.join(", ")||"None"}</div>`;
+  planetOutput.style.display="block";
 }
 </script>
 
