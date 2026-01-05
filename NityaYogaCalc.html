@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nitya Yoga Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --sun-color: #FF9800;
+      --sun-light: #FFB74D;
+      --sun-dark: #F57C00;
+      --moon-color: #2196F3;
+      --moon-light: #64B5F6;
+      --moon-dark: #1976D2;
+      --result-color: #4CAF50;
+      --result-light: #81C784;
+      --result-dark: #388E3C;
+      --info-color: #9C27B0;
+      --info-light: #BA68C8;
+      --info-dark: #7B1FA2;
+      --dark: #2C3E50;
+      --light: #F8F9FA;
+      --white: #FFFFFF;
+      --text: #2C3E50;
+      --text-light: #6C757D;
+      --border: #E0E0E0;
+      --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 25px;
+      margin-bottom: 24px;
+      transition: var(--transition);
+      border: 1px solid var(--border);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .logo-icon {
+      font-size: 2.5rem;
+      color: var(--dark);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: var(--dark);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    @media (max-width: 768px) {
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sun-card {
+      border-top: 4px solid var(--sun-color);
+    }
+
+    .moon-card {
+      border-top: 4px solid var(--moon-color);
+    }
+
+    .position-card h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+    }
+
+    .position-card h2 i {
+      font-size: 1.6rem;
+    }
+
+    .sun-card h2 {
+      color: var(--sun-dark);
+    }
+
+    .moon-card h2 {
+      color: var(--moon-dark);
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 480px) {
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 1rem;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236C757D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+      transition: var(--transition);
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--sun-color);
+      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+    }
+
+    .moon-card select:focus {
+      border-color: var(--moon-color);
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    @media (max-width: 480px) {
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--sun-color), var(--sun-dark));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--sun-dark), var(--sun-color));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #6C757D, #495057);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #495057, #343A40);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(73, 80, 87, 0.3);
+    }
+
+    .result-card {
+      text-align: center;
+      border-top: 4px solid var(--result-color);
+    }
+
+    .result-card h2 {
+      margin-bottom: 20px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .calculation-details {
+      background: rgba(248, 249, 250, 0.8);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      border: 1px solid var(--border);
+    }
+
+    .yoga-result {
+      background: linear-gradient(135deg, var(--result-color), var(--result-dark));
+      color: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+    }
+
+    .yoga-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    .yoga-number {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .info-section {
+      margin-top: 30px;
+    }
+
+    .yoga-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .yoga-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: var(--transition);
+      border-left: 4px solid var(--info-color);
+    }
+
+    .yoga-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .yoga-card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .yoga-card-number {
+      background: var(--info-color);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      font-size: 0.9rem;
+    }
+
+    .yoga-card-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+
+    .yoga-card-description {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      width: 100%;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, var(--info-color), var(--info-dark));
+      color: white;
+    }
+
+    .btn-info:hover {
+      background: linear-gradient(135deg, var(--info-dark), var(--info-color));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-star-and-crescent logo-icon"></i>
+      </div>
+      <h1>Nitya Yoga Calculator</h1>
+      <p class="subtitle">Enter Sun and Moon positions to calculate the Nitya Yoga. The calculator converts positions to absolute longitudes, sums them, divides by 13°20′, and maps to one of the 27 Nitya Yogas.</p>
+    </header>
+
+    <div class="calculator-grid">
+      <div class="card sun-card">
+        <h2><i class="fas fa-sun"></i> Sun Position</h2>
+        <div class="input-group">
+          <label for="sunSign">Zodiac Sign</label>
+          <select id="sunSign">
+            <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+            <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+            <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="sunDeg">Degrees (0-29°)</label>
+            <select id="sunDeg"></select>
+          </div>
+          <div class="input-group">
+            <label for="sunMin">Minutes (0-59′)</label>
+            <select id="sunMin"></select>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="sunSec">Seconds (0-59″)</label>
+            <select id="sunSec"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card moon-card">
+        <h2><i class="fas fa-moon"></i> Moon Position</h2>
+        <div class="input-group">
+          <label for="moonSign">Zodiac Sign</label>
+          <select id="moonSign">
+            <option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option>
+            <option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option>
+            <option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="moonDeg">Degrees (0-29°)</label>
+            <select id="moonDeg"></select>
+          </div>
+          <div class="input-group">
+            <label for="moonMin">Minutes (0-59′)</label>
+            <select id="moonMin"></select>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="moonSec">Seconds (0-59″)</label>
+            <select id="moonSec"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="calcBtn" class="btn btn-primary">
+        <i class="fas fa-calculator"></i> Calculate Nitya Yoga
+      </button>
+      <button id="clearBtn" class="btn btn-secondary">
+        <i class="fas fa-eraser"></i> Clear All
+      </button>
+    </div>
+
+    <div class="card result-card">
+      <h2><i class="fas fa-chart-pie"></i> Calculation Result</h2>
+      <div id="details" class="calculation-details">Enter positions and click Calculate to see results</div>
+      <div id="result" class="yoga-result pulse">
+        <div class="yoga-number">Nitya Yoga will appear here</div>
+        <div class="yoga-name">-</div>
+      </div>
+    </div>
+
+    <button id="showInfo" class="btn btn-info" style="width: 100%; margin-top: 20px;">
+      <i class="fas fa-info-circle"></i> Show Details of 27 Nitya Yogas
+    </button>
+
+    <div id="infoBlock" class="info-section hidden">
+      <div class="card">
+        <h2 style="text-align: center; margin-bottom: 20px;">
+          <i class="fas fa-book-open"></i> The 27 Nitya Yogas
+        </h2>
+        <div class="yoga-grid">
+          <!-- Yoga cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Nitya Yoga Calculator &copy; 2023 | Vedic Astrology Tool</p>
+    </div>
+  </div>
+
+  <script>
+    // Populate dropdowns with options
+    function makeOptions(n) {
+      let out = "";
+      for (let i = 0; i <= n; i++) {
+        out += `<option value="${i}">${i}</option>`;
+      }
+      return out;
+    }
+    
+    // Initialize dropdowns
+    document.getElementById("sunDeg").innerHTML = makeOptions(29);
+    document.getElementById("sunMin").innerHTML = makeOptions(59);
+    document.getElementById("sunSec").innerHTML = makeOptions(59);
+    document.getElementById("moonDeg").innerHTML = makeOptions(29);
+    document.getElementById("moonMin").innerHTML = makeOptions(59);
+    document.getElementById("moonSec").innerHTML = makeOptions(59);
+
+    // Core calculation logic
+    const signOffsets = {
+      "Aries": 0, "Taurus": 30, "Gemini": 60, "Cancer": 90,
+      "Leo": 120, "Virgo": 150, "Libra": 180, "Scorpio": 210,
+      "Sagittarius": 240, "Capricorn": 270, "Aquarius": 300, "Pisces": 330
+    };
+
+    // Corrected order of Nitya Yogas
+    const nityaYogas = [
+      "Vishkumbha", "Preeti", "Ayushman", "Saubhagya", "Shobhana", 
+      "Atiganda", "Sukarma", "Dhriti", "Shoola", "Ganda", 
+      "Vriddhi", "Dhruva", "Vyaghata", "Harshana", "Vajra", 
+      "Siddhi", "Vyatipata", "Variyan", "Parigha", "Shiva", 
+      "Siddha", "Sadhya", "Shubha", "Shukla", "Brahma", 
+      "Indra", "Vaidhriti"
+    ];
+
+    const yogaDescriptions = [
+      "Vishkumbha deciphers to a 'poisonous pot' and is deemed to be a mixed yoga, bringing both challenges and opportunities. Thus, one experiences situations testing their resilience and problem-solving capabilities. The natives born under the Vishkumbha Yoga can easily overcome difficult situations and arise stronger from hardships.",
+      "The meaning of Preeti is devotion, and it is a yoga promoting love, harmony, and positive relationships. Natives born under this yoga are usually warm, pleasant, and understanding. As this yoga fosters a loving and caring personality, the natives improve interpersonal relationships and build a harmonious environment around them, thus building a robust and lasting bond.",
+      "Ayushman means a healthy and long life. This yoga is related to energy, vitality, and overall well-being. According to the Nithya yoga astrology, this yoga contributes to an energetic and robust life for the natives, enabling them to pursue their goals with passion.",
+      "Saubhagya means good fortune and prosperity. Hence, this yoga fetches fortune, wealth, and success in various initiatives. The natives born under this yoga hold high luck and financial success. Moreover, this yoga draws favorable opportunities and accomplishes prosperity.",
+      "Shobhana denotes magnificent or auspicious. This yoga represents charm, beauty, and elegance. The natives born under this yoga hold a magnetic personality and relish social success. They are admired and liked, which further helps them grab new opportunities.",
+      "Atiganda is a yoga that is challenging and related to obstructions and hardships. The natives born under this yoga are often tested for their determination and perseverance, thus promoting inner strength and capacity to overpower challenges. Thus, this helps them become innovative and resilient in adversities.",
+      "Sukarma means virtuous and good actions. This yoga facilitates ethical conduct and favorable contributions to society by the individuals. The natives born under this yoga are showered with admiration and respect and hold a good reputation.",
+      "Dhriti denotes patience and dedication. This yoga facilitates stability and endurance. The natives born under this yoga have the capacity to remain calm even under pressure and strive through challenges, facilitating a stable and grounded approach to life.",
+      "Shoola means trident or thorn, indicating the potential for conflict and battles. The natives born under this yoga have the power to manage disputes and disputes effectively as this yoga hones conflict-resolution abilities and improves mental resilience.",
+      "Ganda symbolizes risk or obstruction. Hence, this yoga fetches attention to viable dangers and challenges. As the natives born under Ganda Yoga can navigate risks and challenges with carefulness, this yoga can help enhance awareness and prepare natives to endure hardships proactively.",
+      "Vriddhi denotes growth and development. This yoga presents prospects for personal and professional development. Vriddhi Yoga fetches many opportunities for growth and success. The natives born under this yoga assumably undergo significant personal and professional advancements.",
+      "Dhruva means consistent or immovable. This yoga symbolizes solidity, endurance, and a strong sense of purpose. The natives born under this yoga are reliable, have a strong sense of purpose, and stay focused on their goals, consistently attaining progress and achievement.",
+      "Vyaghata denotes obstacles or damage. This yoga reveals probable barriers and restrictions. The natives born under this yoga have strong problem-solving aptitudes and strength against adversities. They can overcome obstructions and emerge more powerful from challenges.",
+      "As the term Harshana means happiness, this yoga fetches individuals joy and a positive outlook on life. The natives born under this yoga encounter pleasure and contentment, facilitating an optimistic attitude and contributing to overall well-being.",
+      "Vajra represents a diamond or thunderbolt and denotes power and invincibility. The natives born under this yoga have the ability to defy challenges and hold mental fortitude. Moreover, the resilience and inner strength of the natives are enhanced, making them determined even in adversities.",
+      "Siddhi denotes success or accomplishment. This yoga symbolizes the culmination of goals and achievements. The natives born under this yoga achieve success in their endeavors and accomplish their goals. They can even encounter substantial achievements and triumphs in their lives.",
+      "Considered to be an inauspicious yoga, the Vyatipata is related to disturbances and sudden changes. This yoga acquaints adaptability and the capability to manage unexpected changes. The natives born under this yoga should be flexible and resilient, which shall help them to navigate the uncertainties of life.",
+      "The term Variyan means beneficial or exceptional. This yoga symbolizes high value and excellence and obtains admiration and respect for the individuals. The natives born under this yoga maintain a good reputation and value, which further gets them praise from others.",
+      "Parigha means barrier or hindrance. Thus, this yoga highlights delays and blockages. It develops problem-solving abilities and renders the strength to overpower obstacles. The natives born under this yoga learn to navigate obstacles with perseverance and persistence.",
+      "As Shiva means compassionate and auspicious, this yoga conveys positive shifts, peace, and spiritual growth. The natives born under this Nithya Yoga, as per astrology, are known to witness spiritual enlightenment and inner peace.",
+      "Siddha represents perfected or accomplished and indicates proficiency and excellence in various skills. The natives born under this yoga acquire mastery and perfection and boost the ability of the natives to thrive in their chosen fields.",
+      "The term Sadhya means obtainable. This yoga denotes the actualization of the ambitions and goals of the individuals. The natives born under this yoga can fulfill their desired goals and have a noteworthy advancement in their endeavors.",
+      "As Shubha means auspicious, this yoga fosters positivity and good fortune. The natives born under this yoga experience a pleasant fortune and harmonious relationships, which enriches their overall well-being and happiness.",
+      "Shukla means pure and brilliant and denotes clarity, purity, and a positive lookout. The natives born under this yoga hold an optimistic perspective on life, which helps contribute to overall happiness and satisfaction.",
+      "As the term Brahma represents creativeness, this yoga denotes innovation and new beginnings. The natives born under this yoga may undergo new beginnings and have prospects for creative presentation, leading to notable achievements.",
+      "Indra means power and leadership. Hence, this yoga represents strength, impact, and command. The natives born under this yoga can hold powerful and influential positions, leading to substantial accomplishments and honor.",
+      "Vaidhriti denotes cohesion or unity, and thus, this Nitya yoga promotes cooperation. Natives born under this yoga can hold balance and cohesion in their personal and professional relationships, contributing towards a validating and coordinated environment."
+    ];
+
+    function toAbsoluteLongitude(sign, deg, min, sec) {
+      const offset = signOffsets[sign];
+      return offset + Number(deg) + Number(min) / 60 + Number(sec) / 3600;
+    }
+
+    function calcNityaYoga() {
+      // Show loading state
+      const calcBtn = document.getElementById('calcBtn');
+      const originalHTML = calcBtn.innerHTML;
+      calcBtn.innerHTML = '<span class="loading"></span> Calculating...';
+      calcBtn.disabled = true;
+      
+      // Simulate calculation delay for better UX
+      setTimeout(() => {
+        const SD = document.getElementById('sunDeg').value;
+        const SM = document.getElementById('sunMin').value;
+        const SS = document.getElementById('sunSec').value;
+        const MD = document.getElementById('moonDeg').value;
+        const MM = document.getElementById('moonMin').value;
+        const MS = document.getElementById('moonSec').value;
+        const sunSign = document.getElementById('sunSign').value;
+        const moonSign = document.getElementById('moonSign').value;
+
+        const sunLon = toAbsoluteLongitude(sunSign, SD, SM, SS);
+        const moonLon = toAbsoluteLongitude(moonSign, MD, MM, MS);
+
+        const total = sunLon + moonLon;
+        const unit = 13 + 20/60;
+
+        const quotient = total / unit;
+        const index = Math.floor(quotient % 27) + 1;
+        const yogaName = nityaYogas[index - 1];
+
+        document.getElementById('details').textContent =
+          `Sun = ${sunSign} ${SD}°${SM}′${SS}″ → ${sunLon.toFixed(3)}°\nMoon = ${moonSign} ${MD}°${MM}′${MS}″ → ${moonLon.toFixed(3)}°\nSum = ${total.toFixed(3)}° | Unit = 13°20′ | Quotient = ${quotient.toFixed(3)} | Mod 27 = ${(quotient % 27).toFixed(3)}`;
+
+        document.getElementById('result').innerHTML = `
+          <div class="yoga-number">Nitya Yoga #${index}</div>
+          <div class="yoga-name">${yogaName}</div>
+        `;
+        
+        // Restore button
+        calcBtn.innerHTML = originalHTML;
+        calcBtn.disabled = false;
+      }, 800);
+    }
+
+    // Clear button functionality
+    document.getElementById("clearBtn").addEventListener("click", function(){
+      document.getElementById("sunDeg").value = 0;
+      document.getElementById("sunMin").value = 0;
+      document.getElementById("sunSec").value = 0;
+      document.getElementById("moonDeg").value = 0;
+      document.getElementById("moonMin").value = 0;
+      document.getElementById("moonSec").value = 0;
+      document.getElementById("details").textContent = "Enter positions and click Calculate to see results";
+      document.getElementById("result").innerHTML = `
+        <div class="yoga-number">Nitya Yoga will appear here</div>
+        <div class="yoga-name">-</div>
+      `;
+    });
+
+    // Calculate button functionality
+    document.getElementById("calcBtn").addEventListener("click", calcNityaYoga);
+
+    // Show yoga info functionality
+    document.getElementById("showInfo").addEventListener("click", function(){
+      const infoBlock = document.getElementById("infoBlock");
+      const yogaGrid = document.querySelector('.yoga-grid');
+      
+      if (infoBlock.classList.contains('hidden')) {
+        // Populate yoga grid if not already populated
+        if (yogaGrid.children.length === 0) {
+          let yogaHTML = '';
+          for (let i = 0; i < nityaYogas.length; i++) {
+            yogaHTML += `
+              <div class="yoga-card">
+                <div class="yoga-card-header">
+                  <div class="yoga-card-number">${i+1}</div>
+                  <div class="yoga-card-name">${nityaYogas[i]}</div>
+                </div>
+                <div class="yoga-card-description">${yogaDescriptions[i]}</div>
+              </div>
+            `;
+          }
+          yogaGrid.innerHTML = yogaHTML;
+        }
+        
+        infoBlock.classList.remove('hidden');
+        this.innerHTML = '<i class="fas fa-times"></i> Hide Details of 27 Nitya Yogas';
+      } else {
+        infoBlock.classList.add('hidden');
+        this.innerHTML = '<i class="fas fa-info-circle"></i> Show Details of 27 Nitya Yogas';
+      }
+    });
+  </script>
+</body>
+</html>
